@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../lib/input.h"
 
-int getLine(char line[]);
 int validateMinMax(const char line[], int length, int min, int max);
 int validatePositional(const char line[], int length, int min, int max);
 
@@ -67,16 +67,4 @@ int validatePositional(const char line[], int length, int pos1, int pos2) {
     }
   }
   return matchCount == 1;
-}
-
-/* Read the next line from input, store contents and return its length
- * TODO add these helpers to a shared lib file and link in */
-int getLine(char line[]) {
-  char c;
-  int length = 0;
-  while ((c = getchar()) != EOF && c != '\n') {
-    line[length++] = c;
-  }
-  line[length] = '\0';
-  return length;
 }

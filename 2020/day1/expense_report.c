@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../lib/input.h"
 
 #define TARGET 2020
 
-int readInput(char input[]);
 void parseInput(char input[], int parsed[]);
 int solveTwoEntries(const int parsed[], int numberEntries);
 int solveThreeEntries(const int parsed[], int numberEntries);
@@ -12,28 +12,13 @@ int main() {
   char input[10000];
   int parsed[1000];
 
-  int lineCount = readInput(input);
+  int lineCount = getInput(input);
   parseInput(input, parsed);
 
   printf("SOLVING FOR TWO ENTRIES\n");
-  printf("Product is %d\n", solveTwoEntries(parsed, lineCount));
+  printf("Product is %d\n\n", solveTwoEntries(parsed, lineCount));
   printf("SOLVING FOR THREE ENTRIES\n");
   printf("Product is %d\n", solveThreeEntries(parsed, lineCount));
-}
-
-/* Read the input into a character array and return number of lines */
-int readInput(char input[]) {
-  char c;
-  int i;
-  int lineCount = 0;
-  for (i = 0; (c = getchar()) != EOF; i++) {
-    input[i] = c;
-    if (c == '\n') {
-      lineCount++;
-    }
-  }
-  input[i] = '\0';
-  return lineCount;
 }
 
 /* Parse the character array into an array of integers */

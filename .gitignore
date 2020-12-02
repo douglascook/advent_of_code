@@ -1,3 +1,6 @@
 *.pyc
 *.out
+*.o
 *.dSYM/
+
+2020/input.txt
