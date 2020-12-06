@@ -4,8 +4,11 @@
 int getLine(char line[]) {
   char c;
   int length = 0;
-  while ((c = getchar()) != EOF && c != '\n') {
+  while ((c = getchar()) != EOF) {
     line[length++] = c;
+    if (c == '\n') {
+      break;
+    }
   }
   line[length] = '\0';
   return length;

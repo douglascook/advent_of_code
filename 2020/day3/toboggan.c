@@ -13,14 +13,14 @@ int main() {
   char line[100];
   char route[ROWS][COLS];
 
-  int width, w;
+  int width, w, i;
   int length = 0;
 
   // TODO work out how to return/update height and width and refactor into function
   while((w = getLine(line)) > 0) {
     // TODO better way to store width without using a temp variable?
-    width = w;
-    int i;
+    // ignore newline char
+    width = w - 1;
     for (i = 0; i < width; i++) {
       route[length][i] = line[i];
     }
