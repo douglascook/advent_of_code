@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /* Read the next line from input, store contents and return its length */
-int getLine(char line[]) {
+int getLine(char* line) {
   char c;
   int length = 0;
   while ((c = getchar()) != EOF) {
@@ -15,7 +15,7 @@ int getLine(char line[]) {
 }
 
 /* Read the entire input into a character array and return number of lines */
-int getInput(char input[]) {
+int getInput(char* input) {
   char c;
   int i;
   int lineCount = 0;
