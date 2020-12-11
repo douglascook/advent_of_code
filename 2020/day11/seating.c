@@ -8,91 +8,74 @@
 char FLOOR = '.';
 char EMPTY = 'L';
 char OCCUPIED = '#';
+char ORIGINAL_SEATS[MAX_DIM][MAX_DIM];
+int ROW_COUNT;
+int COL_COUNT;
 
-void loadSeats(char seats[MAX_DIM][MAX_DIM], int *rowCount, int *colCount);
-int arraysEqual(char a[MAX_DIM][MAX_DIM], char b[MAX_DIM][MAX_DIM], int rowCount, int colCount);
-void updateSeats(char seats[MAX_DIM][MAX_DIM], char next[MAX_DIM][MAX_DIM], int rowCount, int colCount);
-char getNextState(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, int col, int row);
-int countState(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, char state);
-void printSeats(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount);
-void updateSeatsAgain(char seats[MAX_DIM][MAX_DIM], char next[MAX_DIM][MAX_DIM], int rowCount, int colCount);
-char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, int row, int col);
+void loadSeats();
+void run(char (*updateMethod)());
+char getNextState(char seats[MAX_DIM][MAX_DIM], int col, int row);
+char getNextState2(char seats[MAX_DIM][MAX_DIM], int row, int col);
+int arraysEqual(char a[MAX_DIM][MAX_DIM], char b[MAX_DIM][MAX_DIM]);
+int countState(char seats[MAX_DIM][MAX_DIM], char state);
+void printSeats(char seats[MAX_DIM][MAX_DIM]);
 
 
 int main() {
-  char seats[MAX_DIM][MAX_DIM], originalSeats[MAX_DIM][MAX_DIM], next[MAX_DIM][MAX_DIM];
-  int rowCount = 0, colCount = 0;
-
-  printf("Running with original update method\n");
-  loadSeats(seats, &rowCount, &colCount);
-  printSeats(seats, rowCount, colCount);
-  memcpy(&originalSeats, &seats, sizeof(originalSeats));
-
-  int iteration = 0;
-  while (1) {
-    printf("Iteration %d\n", iteration++);
-    updateSeats(seats, next, rowCount, colCount);
-    printSeats(next, rowCount, colCount);
-
-    if (arraysEqual(seats, next, rowCount, colCount)) {
-      break;
-    }
-    memcpy(&seats, &next, sizeof(seats));
-  }
-  printf("Final state\n");
-  printSeats(next, rowCount, colCount);
-  printf("Occupied seats = %d\n", countState(next, rowCount, colCount, OCCUPIED));
-
-  printf("Running with new update method\n");
-  memcpy(&seats, &originalSeats, sizeof(originalSeats));
-  printSeats(seats, rowCount, colCount);
-
-  iteration = 0;
-  while (1) {
-    printf("Iteration %d\n", iteration++);
-    updateSeatsAgain(seats, next, rowCount, colCount);
-    printSeats(next, rowCount, colCount);
-
-    if (arraysEqual(seats, next, rowCount, colCount)) {
-      break;
-    }
-    memcpy(&seats, &next, sizeof(seats));
-  }
-  printf("Final state\n");
-  printSeats(next, rowCount, colCount);
-  printf("Occupied seats = %d\n", countState(next, rowCount, colCount, OCCUPIED));
+  loadSeats();
+  printf("Running with first update method\n");
+  run(getNextState);
+  printf("\nRunning with second update method\n");
+  run(getNextState2);
 }
 
-void loadSeats(char seats[MAX_DIM][MAX_DIM], int *rowCount, int *colCount) {
+void run(char (*updateMethod)()) {
+  char seats[MAX_DIM][MAX_DIM], next[MAX_DIM][MAX_DIM];
+  memcpy(&seats, &ORIGINAL_SEATS, sizeof(seats));
+  printf("Initial state\n");
+  printSeats(seats);
+
+  int iteration = 0, nextState;
+  while (1) {
+    /* printf("Iteration %d\n", iteration++); */
+    for (int r = 0; r < ROW_COUNT; r++) {
+      for (int c = 0; c < COL_COUNT; c++) {
+        nextState = updateMethod(seats, r, c);
+        next[r][c] = nextState;
+      }
+    }
+    /* printSeats(next); */
+
+    if (arraysEqual(seats, next)) {
+      break;
+    }
+    memcpy(&seats, &next, sizeof(seats));
+  }
+  printf("Final state\n");
+  printSeats(next);
+  printf("Occupied seats = %d\n", countState(next, OCCUPIED));
+}
+
+void loadSeats() {
   int r = 0, length = 0;
   char row[MAX_DIM];
 
   while ((length = getLine(row)) != 0) {
     // don't include the newline
-    *colCount = length - 1;
-    for (int c = 0; c < *colCount; c++) {
-      seats[r][c] = row[c];
+    COL_COUNT = length - 1;
+    for (int c = 0; c < COL_COUNT; c++) {
+      ORIGINAL_SEATS[r][c] = row[c];
     }
     r++;
   }
-  *rowCount = r;
-  printf("Seats have %d rows and %d columns\n", *rowCount, *colCount);
+  ROW_COUNT = r;
+  printf("There are %d rows and %d columns of seats\n", ROW_COUNT, COL_COUNT);
 }
 
 
-void updateSeats(char seats[MAX_DIM][MAX_DIM], char next[MAX_DIM][MAX_DIM], int rowCount, int colCount) {
-  int nextState;
-  for (int r = 0; r < rowCount; r++) {
-    for (int c = 0; c < colCount; c++) {
-      nextState = getNextState(seats, rowCount, colCount, r, c);
-      next[r][c] = nextState;
-    }
-  }
-}
-
-char getNextState(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, int row, int col) {
+/* Consider immediate neighbours when looking for occupied seats */
+char getNextState(char seats[MAX_DIM][MAX_DIM], int row, int col) {
   char current = seats[row][col];
-
   // no need to calculate anything for floor
   if (current == FLOOR) {
     return FLOOR;
@@ -100,8 +83,8 @@ char getNextState(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, int 
 
   // loop over all neighbours and count occupied
   int neighbours = 0;
-  for (int r = fmax(row-1, 0); r < fmin(row+2, rowCount); r++) {
-    for (int c = fmax(col-1, 0); c < fmin(col+2, colCount); c++) {
+  for (int r = fmax(row-1, 0); r < fmin(row+2, ROW_COUNT); r++) {
+    for (int c = fmax(col-1, 0); c < fmin(col+2, COL_COUNT); c++) {
       // don't consider the seat itself
       if (r == row && c == col) {
         continue;
@@ -121,19 +104,10 @@ char getNextState(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, int 
   return current;
 }
 
-void updateSeatsAgain(char seats[MAX_DIM][MAX_DIM], char next[MAX_DIM][MAX_DIM], int rowCount, int colCount) {
-  int nextState;
-  for (int r = 0; r < rowCount; r++) {
-    for (int c = 0; c < colCount; c++) {
-      nextState = getNextStateAgain(seats, rowCount, colCount, r, c);
-      next[r][c] = nextState;
-    }
-  }
-}
-
-char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, int row, int col) {
+/* Consider the first non-floor cell when looking for occupied seats, if the
+ * immediate neigbour is a floor cell then look at the next in that direction */
+char getNextState2(char seats[MAX_DIM][MAX_DIM], int row, int col) {
   char current = seats[row][col];
-
   // no need to calculate anything for floor
   if (current == FLOOR) {
     return FLOOR;
@@ -161,7 +135,7 @@ char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount,
   // north east
   r = row;
   c = col;
-  while (--r >= 0 && ++c < colCount) {
+  while (--r >= 0 && ++c < COL_COUNT) {
     if (seats[r][c] != FLOOR) {
       neighbours += seats[r][c] == OCCUPIED;
       break;
@@ -170,7 +144,7 @@ char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount,
   // east
   r = row;
   c = col;
-  while (++c < colCount) {
+  while (++c < COL_COUNT) {
     if (seats[r][c] != FLOOR) {
       neighbours += seats[r][c] == OCCUPIED;
       break;
@@ -179,7 +153,7 @@ char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount,
   // south east
   r = row;
   c = col;
-  while (++r < rowCount && ++c < colCount) {
+  while (++r < ROW_COUNT && ++c < COL_COUNT) {
     if (seats[r][c] != FLOOR) {
       neighbours += seats[r][c] == OCCUPIED;
       break;
@@ -188,7 +162,7 @@ char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount,
   // south
   r = row;
   c = col;
-  while (++r < rowCount) {
+  while (++r < ROW_COUNT) {
     if (seats[r][c] != FLOOR) {
       neighbours += seats[r][c] == OCCUPIED;
       break;
@@ -197,7 +171,7 @@ char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount,
   // south west
   r = row;
   c = col;
-  while (++r < rowCount && --c >= 0) {
+  while (++r < ROW_COUNT && --c >= 0) {
     if (seats[r][c] != FLOOR) {
       neighbours += seats[r][c] == OCCUPIED;
       break;
@@ -224,9 +198,9 @@ char getNextStateAgain(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount,
   return current;
 }
 
-int arraysEqual(char a[MAX_DIM][MAX_DIM], char b[MAX_DIM][MAX_DIM], int rowCount, int colCount) {
-  for (int r = 0; r < rowCount; r++) {
-    for (int c = 0; c < colCount; c++) {
+int arraysEqual(char a[MAX_DIM][MAX_DIM], char b[MAX_DIM][MAX_DIM]) {
+  for (int r = 0; r < ROW_COUNT; r++) {
+    for (int c = 0; c < COL_COUNT; c++) {
       if (a[r][c] != b[r][c]) {
         return 0;
       }
@@ -235,10 +209,10 @@ int arraysEqual(char a[MAX_DIM][MAX_DIM], char b[MAX_DIM][MAX_DIM], int rowCount
   return 1;
 }
 
-int countState(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, char state) {
+int countState(char seats[MAX_DIM][MAX_DIM], char state) {
   int count = 0;
-  for (int r = 0; r < rowCount; r++) {
-    for (int c = 0; c < colCount; c++) {
+  for (int r = 0; r < ROW_COUNT; r++) {
+    for (int c = 0; c < COL_COUNT; c++) {
       if (seats[r][c] == state) {
         count++;
       }
@@ -247,10 +221,9 @@ int countState(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount, char st
   return count;
 }
 
-void printSeats(char seats[MAX_DIM][MAX_DIM], int rowCount, int colCount) {
-  int count = 0;
-  for (int r = 0; r < rowCount; r++) {
-    for (int c = 0; c < colCount; c++) {
+void printSeats(char seats[MAX_DIM][MAX_DIM]) {
+  for (int r = 0; r < ROW_COUNT; r++) {
+    for (int c = 0; c < COL_COUNT; c++) {
       putchar(seats[r][c]);
     }
     putchar('\n');
