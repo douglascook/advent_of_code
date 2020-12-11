@@ -1,4 +1,4 @@
-.PHONY: day1 day2 day3 day4 day5 day6 day7 day8 day9 day10
+.PHONY: day1 day2 day3 day4 day5 day6 day7 day8 day9 day10 day11
 
 # TODO work out how to template these
 day1: lib.o
@@ -40,6 +40,10 @@ day9: lib.o
 day10: lib.o
 	gcc day10/*.c lib.o -g -o run.o
 	cp day10/input.txt input.txt
+
+day11: lib.o
+	gcc day11/*.c lib.o -g -o run.o
+	cp day11/input.txt input.txt
 
 run:
 	@./run.o < input.txt
