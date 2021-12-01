@@ -4,3 +4,5 @@
 *.dSYM/
 
 2020/input.txt
+
+2021/*/target
