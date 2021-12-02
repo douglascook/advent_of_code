@@ -19,7 +19,7 @@ fn parse_to_int(line: &str) -> i32 {
     return line.trim().parse().expect("Expecting an integer!");
 }
 
-fn count_single_line_increases(lines: &Vec<i32>) -> i32 {
+fn count_single_line_increases(lines: &[i32]) -> i32 {
     let mut increase_count = 0;
     let mut index = 1;
     while index < lines.len() {
@@ -31,7 +31,7 @@ fn count_single_line_increases(lines: &Vec<i32>) -> i32 {
     return increase_count;
 }
 
-fn count_sliding_window_increases(lines: &Vec<i32>, window_size: usize) -> i32 {
+fn count_sliding_window_increases(lines: &[i32], window_size: usize) -> i32 {
     let mut increase_count = 0;
     let mut index = 1;
     let mut previous_sum: i32 = lines[0..window_size].iter().sum();
