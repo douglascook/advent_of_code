@@ -28,7 +28,7 @@ fn count_single_line_increases(lines: &[i32]) -> i32 {
         }
         index += 1;
     }
-    return increase_count;
+    increase_count
 }
 
 fn count_sliding_window_increases(lines: &[i32], window_size: usize) -> i32 {
@@ -43,5 +43,5 @@ fn count_sliding_window_increases(lines: &[i32], window_size: usize) -> i32 {
         previous_sum = current_sum;
         index += 1;
     }
-    return increase_count;
+    increase_count
 }

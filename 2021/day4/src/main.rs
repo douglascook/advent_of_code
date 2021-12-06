@@ -63,13 +63,12 @@ fn calculate_scores(
     for number in draw {
         called_numbers.insert(number, true);
 
-        for board_index in 0..board_count {
+        for (board_index, board) in boards.iter_mut().enumerate().take(board_count) {
             // skip any boards that have already won
             if !completed.contains(&board_index) {
-                let board = &mut boards[board_index];
-                if board.is_winner(&called_numbers) {
+                if board.is_winner(called_numbers) {
                     completed.push(board_index);
-                    let score = board.get_score(&called_numbers);
+                    let score = board.get_score(called_numbers);
                     scores.push((board_index, score, score * number));
                 }
             }

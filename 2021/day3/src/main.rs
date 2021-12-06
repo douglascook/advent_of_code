@@ -36,11 +36,11 @@ fn run_diagnostics(filepath: &str) {
 
 // TODO can these be passed in as anonymous functions instead?
 fn chars_equal(a: char, b: char) -> bool {
-    return a == b;
+    a == b
 }
 
 fn chars_not_equal(a: char, b: char) -> bool {
-    return a != b;
+    a != b
 }
 
 fn parse_bit_strings(contents: &str) -> Vec<Vec<char>> {
@@ -49,11 +49,11 @@ fn parse_bit_strings(contents: &str) -> Vec<Vec<char>> {
         let line_bits: Vec<char> = line.chars().collect();
         bits.push(line_bits);
     }
-    return bits;
+    bits
 }
 
-fn calculate_epsilon_and_gamma(bits: &Vec<Vec<char>>, line_length: usize, num_rows: usize) {
-    let counters = count_set_bits_for_all_columns(&bits, line_length);
+fn calculate_epsilon_and_gamma(bits: &[Vec<char>], line_length: usize, num_rows: usize) {
+    let counters = count_set_bits_for_all_columns(bits, line_length);
 
     let mut gamma = 0;
     let mut epsilon = 0;
@@ -75,8 +75,8 @@ fn calculate_epsilon_and_gamma(bits: &Vec<Vec<char>>, line_length: usize, num_ro
     );
 }
 
-fn count_set_bits_for_all_columns(bits: &Vec<Vec<char>>, line_length: usize) -> Vec<usize> {
-    let mut counters = vec![0 as usize; line_length];
+fn count_set_bits_for_all_columns(bits: &[Vec<char>], line_length: usize) -> Vec<usize> {
+    let mut counters = vec![0; line_length];
     for line in bits {
         for (i, &bit) in line.iter().enumerate() {
             if bit == SET {
@@ -84,11 +84,11 @@ fn count_set_bits_for_all_columns(bits: &Vec<Vec<char>>, line_length: usize) -> 
             }
         }
     }
-    return counters;
+    counters
 }
 
-fn calculate_rating(bits: &Vec<Vec<char>>, filter_fn: &dyn Fn(char, char) -> bool) -> i32 {
-    let mut oxygen = bits.clone();
+fn calculate_rating(bits: &[Vec<char>], filter_fn: &dyn Fn(char, char) -> bool) -> i32 {
+    let mut oxygen = bits.to_owned();
     let mut index = 0;
     while oxygen.len() > 1 {
         let mut most_common = UNSET;
@@ -104,16 +104,16 @@ fn calculate_rating(bits: &Vec<Vec<char>>, filter_fn: &dyn Fn(char, char) -> boo
             .collect();
         index += 1;
     }
-    return convert_to_decimal(&oxygen[0]);
+    convert_to_decimal(&oxygen[0])
 }
 
 // TODO what is the deal with unsigned vs signed ints here???
-fn convert_to_decimal(bits: &Vec<char>) -> i32 {
+fn convert_to_decimal(bits: &[char]) -> i32 {
     let mut total: i32 = 0;
     for (i, bit) in bits.iter().rev().enumerate() {
         if bit == &SET {
             total += BASE.pow(i as u32);
         }
     }
-    return total;
+    total
 }

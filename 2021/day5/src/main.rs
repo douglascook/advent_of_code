@@ -98,19 +98,20 @@ impl Line {
         }
         let delta = right.x - left.x;
 
+        let coords: Vec<Point>;
         // horizontal
         if self.a.y == self.b.y {
-            return (min_x..=max_x)
+            coords = (min_x..=max_x)
                 .map(|i| Point { x: i, y: self.a.y })
                 .collect();
         // vertical
         } else if self.a.x == self.b.x {
-            return (min_y..=max_y)
+            coords = (min_y..=max_y)
                 .map(|j| Point { x: self.a.x, y: j })
                 .collect();
         // diagonal bottom left to top right
         } else if left.y < right.y {
-            return (0..=delta)
+            coords = (0..=delta)
                 .map(|d| Point {
                     x: left.x + d,
                     y: left.y + d,
@@ -118,13 +119,14 @@ impl Line {
                 .collect();
         // diagonal top left to bottom right
         } else {
-            return (0..=delta)
+            coords = (0..=delta)
                 .map(|d| Point {
                     x: left.x + d,
                     y: left.y - d,
                 })
                 .collect();
         }
+        coords
     }
 }
 

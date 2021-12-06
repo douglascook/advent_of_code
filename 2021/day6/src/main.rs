@@ -37,7 +37,7 @@ fn count_fish(filepath: &str, generations: usize) {
 }
 
 fn update_population(counters: Vec<usize>) -> Vec<usize> {
-    let current_generation = counters.clone();
+    let current_generation = counters;
     let mut counters: Vec<usize> = vec![0; 8];
 
     // shift values to left by 1 position to decrement counts
@@ -46,5 +46,6 @@ fn update_population(counters: Vec<usize>) -> Vec<usize> {
     counters.push(current_generation[0]);
     // fish that just have timer reset to 6
     counters[6] += current_generation[0];
-    return counters;
+
+    counters
 }
