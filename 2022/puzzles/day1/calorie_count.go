@@ -1,18 +1,17 @@
-package main
+package day1
 
 import (
-	"bufio"
+	"adventofcode/helpers"
 	"fmt"
 	"log"
-	"os"
 	"sort"
 	"strconv"
 )
 
-func main() {
+// Day1 Puzzle
+func Day1(filepath string) {
 	fmt.Println("Day 1 - Counting calories!")
-
-	lines := readLines("input.txt")
+	lines := helpers.ReadLines(filepath)
 
 	var elfCalories []int
 	elf := 0
@@ -39,21 +38,4 @@ func main() {
 		total = total + elf
 	}
 	fmt.Println("Together they are carrying", total)
-}
-
-func readLines(filepath string) []string {
-	file, err := os.Open(filepath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }

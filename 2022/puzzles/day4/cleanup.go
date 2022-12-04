@@ -1,10 +1,9 @@
-package main
+package day4
 
 import (
-	"bufio"
+	"adventofcode/helpers"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -23,10 +22,11 @@ func (s Section) overlaps(otherSection Section) bool {
 	return !disjoint
 }
 
-func main() {
+// Day4 Puzzle
+func Day4(filepath string) {
 	fmt.Println("Day 4 - Camp Cleanup!")
 
-	sections := readLines("input.txt")
+	sections := helpers.ReadLines(filepath)
 	findOverlaps(sections)
 }
 
@@ -60,22 +60,4 @@ func parseSection(section string) Section {
 		log.Fatal(err)
 	}
 	return Section{sectionStart, sectionEnd}
-}
-
-// TODO learn how to use modules properly and put this into shared helpers
-func readLines(filepath string) []string {
-	file, err := os.Open(filepath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }

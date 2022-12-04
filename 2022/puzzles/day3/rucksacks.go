@@ -1,18 +1,17 @@
-package main
+package day3
 
 import (
-	"bufio"
+	"adventofcode/helpers"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 )
 
-func main() {
+// Day3 Puzzle
+func Day3(filepath string) {
 	fmt.Println("Day 3 - Reorganising rucksacks!")
 
 	prioritiesMap := buildPrioritiesMap()
-	elves := readLines("input.txt")
+	elves := helpers.ReadLines(filepath)
 	var score int
 
 	fmt.Println("Finding items in both rucksacks, per elf")
@@ -68,22 +67,4 @@ func getItemInAll(rucksacks []string, prioritiesMap map[rune]int) int {
 		}
 	}
 	panic("Expected one item to be found in both rucksacks :(")
-}
-
-// TODO learn how to use modules properly and put this into shared helpers
-func readLines(filepath string) []string {
-	file, err := os.Open(filepath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }

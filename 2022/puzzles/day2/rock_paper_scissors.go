@@ -1,10 +1,8 @@
-package main
+package day2
 
 import (
-	"bufio"
+	"adventofcode/helpers"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 )
 
@@ -16,12 +14,13 @@ const win = "win"
 const lose = "lose"
 const draw = "draw"
 
-func main() {
+// Day2 Puzzle
+func Day2(filepath string) {
 	fmt.Println("Day 2 - Rock Paper Scissors, it's a fix!")
 
 	originalScore := 0
 	maxFitchingScore := 0
-	for _, l := range readLines("input.txt") {
+	for _, l := range helpers.ReadLines(filepath) {
 		opponent, me, _ := strings.Cut(l, " ")
 		rpsMe := translateToRps(me)
 		rpsOpponent := translateToRps(opponent)
@@ -95,22 +94,4 @@ func translateToResult(letter string) string {
 	default:
 		panic("Unexpected letter")
 	}
-}
-
-// TODO learn how to use modules properly and put this into shared helpers
-func readLines(filepath string) []string {
-	file, err := os.Open(filepath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }
