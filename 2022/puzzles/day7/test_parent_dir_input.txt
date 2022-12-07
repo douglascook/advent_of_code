@@ -1,0 +1,6 @@
+$ cd /
+$ ls
+dir a
+$ cd a
+$ cd ..
+$ cd a
