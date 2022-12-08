@@ -13,3 +13,12 @@ func StringToInt(s string) int {
 	}
 	return integer
 }
+
+// RuneToInt converts given rune to an int, failing on any error
+func RuneToInt(r rune) int {
+	integer, err := strconv.Atoi(string(r))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return integer
+}
