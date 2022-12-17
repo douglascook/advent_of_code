@@ -5,6 +5,7 @@ import (
 	"adventofcode/puzzles/day10"
 	"adventofcode/puzzles/day11"
 	"adventofcode/puzzles/day12"
+	"adventofcode/puzzles/day14"
 	"adventofcode/puzzles/day2"
 	"adventofcode/puzzles/day3"
 	"adventofcode/puzzles/day4"
@@ -36,6 +37,7 @@ func main() {
 		"10": day10.Day10,
 		"11": day11.Day11,
 		"12": day12.Day12,
+		"14": day14.Day14,
 	}
 	filepath := "puzzles/day" + day + "/" + inputFile
 	days[day](filepath)
