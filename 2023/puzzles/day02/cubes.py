@@ -1,4 +1,3 @@
-import sys
 import collections
 
 BAG_COUNTS = {"red": 12, "green": 13, "blue": 14}
@@ -53,7 +52,3 @@ def parse_cube_counts(draws):
             counts[colour] = int(n)
         cube_counts.append(counts)
     return cube_counts
-
-
-if __name__ == "__main__":
-    cubes(sys.argv[1])

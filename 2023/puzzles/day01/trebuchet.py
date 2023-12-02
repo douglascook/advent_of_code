@@ -1,5 +1,3 @@
-import sys
-
 import profiling
 
 DIGITS = {
@@ -77,7 +75,3 @@ def find_first_digit_recursive(matched, remaining, digits):
     digits = {w: v for w, v in digits.items() if w[len(matched)] == next_}
 
     return find_first_digit_recursive(matched + next_, remaining[1:], digits)
-
-
-if __name__ == "__main__":
-    fire(sys.argv[1])
