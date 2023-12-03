@@ -1,5 +1,3 @@
-import profiling
-
 DIGITS = {
     "one": 1,
     "two": 2,
@@ -20,7 +18,6 @@ def _reverse_string(string):
 REVERSED_DIGITS = {_reverse_string(w): v for w, v in DIGITS.items()}
 
 
-@profiling.profile_it
 def fire(filepath):
     calibration_total = 0
     updated_calibration_total = 0

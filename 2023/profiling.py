@@ -12,7 +12,7 @@ def profile_it(func):
             return result
         finally:
             profile.dump_stats(
-                f"{func.__name__}_profile_{datetime.datetime.now().isoformat()}.txt"
+                f"./profiling/{func.__name__}_profile_{datetime.datetime.now().isoformat()}.txt"
             )
 
     return profiled_func
