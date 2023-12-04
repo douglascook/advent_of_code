@@ -3,6 +3,7 @@ import sys
 from puzzles.day01 import trebuchet
 from puzzles.day02 import cubes
 from puzzles.day03 import gondola_gears
+from puzzles.day04 import scratchcards
 
 import profiling
 
@@ -10,6 +11,7 @@ PUZZLES = {
     1: trebuchet.fire,
     2: cubes.cubes,
     3: gondola_gears.read_schematic,
+    4: scratchcards.scratch,
 }
 
 
@@ -22,6 +24,6 @@ if __name__ == "__main__":
     input_path = f"{module}/{input_file}"
 
     if len(sys.argv) > 3 and sys.argv[3] == "--profile":
-        puzzle_run = profiling.profile_it(puzzle_run)
+        puzzle_run = profiling.profile_it(puzzle_run, repeats=100)
 
     puzzle_run(input_path)

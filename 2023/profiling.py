@@ -2,12 +2,13 @@ import datetime
 import cProfile
 
 
-def profile_it(func):
+def profile_it(func, repeats=1):
     def profiled_func(*args, **kwargs):
         profile = cProfile.Profile()
         try:
             profile.enable()
-            result = func(*args, **kwargs)
+            for i in range(repeats):
+                result = func(*args, **kwargs)
             profile.disable()
             return result
         finally:
