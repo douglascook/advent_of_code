@@ -5,6 +5,7 @@ from puzzles.day02 import cubes
 from puzzles.day03 import gondola_gears
 from puzzles.day04 import scratchcards
 from puzzles.day05 import seeds
+from puzzles.day06 import boat_race
 
 import profiling
 
@@ -14,6 +15,7 @@ PUZZLES = {
     3: gondola_gears.read_schematic,
     4: scratchcards.scratch,
     5: seeds.plant,
+    6: boat_race.charge_up,
 }
 
 
