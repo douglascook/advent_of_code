@@ -6,6 +6,7 @@ from puzzles.day03 import gondola_gears
 from puzzles.day04 import scratchcards
 from puzzles.day05 import seeds
 from puzzles.day06 import boat_race
+from puzzles.day07 import camel_cards
 
 import profiling
 
@@ -16,6 +17,7 @@ PUZZLES = {
     4: scratchcards.scratch,
     5: seeds.plant,
     6: boat_race.charge_up,
+    7: camel_cards.deal,
 }
 
 
