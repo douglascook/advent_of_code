@@ -101,7 +101,7 @@ class JokerHand(Hand):
                 if joker_count == 2:
                     return HandType.FOUR_OF_KIND
                 # Joker is single card
-                return HandType.THREE_OF_KIND
+                return HandType.FULL_HOUSE
 
             # One pair and three others.
             # If joker is the pair then update to match any of the others, if not
@@ -134,7 +134,7 @@ def calculate_winnings(hands):
 
     winnings = 0
     for rank, hand in enumerate(ranked_hands, start=1):
-        print(hand, hand.bid)
+        print(hand, "rank", rank, "bid", hand.bid)
         winnings += rank * hand.bid
 
     print("Total winnings =", winnings)
