@@ -8,6 +8,7 @@ from puzzles.day05 import seeds
 from puzzles.day06 import boat_race
 from puzzles.day07 import camel_cards
 from puzzles.day08 import ghost_maps
+from puzzles.day09 import oasis_report
 
 import profiling
 
@@ -20,6 +21,7 @@ PUZZLES = {
     6: boat_race.charge_up,
     7: camel_cards.deal,
     8: ghost_maps.count_steps,
+    9: oasis_report.extrapolate,
 }
 
 
