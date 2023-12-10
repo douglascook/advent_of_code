@@ -9,6 +9,7 @@ from puzzles.day06 import boat_race
 from puzzles.day07 import camel_cards
 from puzzles.day08 import ghost_maps
 from puzzles.day09 import oasis_report
+from puzzles.day10 import pipe_maze
 
 import profiling
 
@@ -22,6 +23,7 @@ PUZZLES = {
     7: camel_cards.deal,
     8: ghost_maps.count_steps,
     9: oasis_report.extrapolate,
+    10: pipe_maze.search,
 }
 
 
@@ -34,6 +36,6 @@ if __name__ == "__main__":
     input_path = f"{module}/{input_file}"
 
     if len(sys.argv) > 3 and sys.argv[3] == "--profile":
-        puzzle_run = profiling.profile_it(puzzle_run, repeats=100)
+        puzzle_run = profiling.profile_it(puzzle_run, repeats=5)
 
     puzzle_run(input_path)
