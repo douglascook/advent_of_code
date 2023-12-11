@@ -10,6 +10,7 @@ from puzzles.day07 import camel_cards
 from puzzles.day08 import ghost_maps
 from puzzles.day09 import oasis_report
 from puzzles.day10 import pipe_maze
+from puzzles.day11 import cosmic_expansion
 
 import profiling
 
@@ -24,6 +25,7 @@ PUZZLES = {
     8: ghost_maps.count_steps,
     9: oasis_report.extrapolate,
     10: pipe_maze.search,
+    11: cosmic_expansion.expand,
 }
 
 
