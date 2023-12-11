@@ -29,17 +29,23 @@ def search(filepath):
     pipe_map = sketch_pipes(filepath)
     start, start_neighbours = find_start(pipe_map)
 
+    # TODO figure out start direction?
+    loop = [(start, "S", "UNKNOWN")]
     loop_points = set([start])
     # Pick first neigbour, arbitrarily
-    pipe, direction = start_neighbours[0]
+    point, pipe, direction = start_neighbours[0]
 
     print("Following route")
-    while pipe not in loop_points:
-        loop_points.add(pipe)
-        pipe, next_pipe, direction = move(pipe, direction, pipe_map)
+    while point not in loop_points:
+        loop_points.add(point)
+        loop.append((point, pipe, direction))
+        point, pipe, direction = move(point, direction, pipe_map)
 
     draw_loop(pipe_map, loop_points)
     print("Furthest point in loop is", len(loop_points) // 2, "steps from start")
+
+    # find_enclosed_sections(pipe_map, loop_points)
+    inside_outside_map(pipe_map, loop)
 
 
 def sketch_pipes(filepath):
@@ -56,15 +62,14 @@ def find_start(pipe_map):
         if "S" in row:
             start = i, row.index("S")
             break
-
     if not start:
         raise ValueError("No Start!?")
 
     pipe_neigbours = []
     for direction in Direction:
         try:
-            next_, _, next_direction = move(start, direction, pipe_map)
-            pipe_neigbours.append((next_, next_direction))
+            next_, next_pipe, next_direction = move(start, direction, pipe_map)
+            pipe_neigbours.append((next_, next_pipe, next_direction))
         except ValueError:
             continue
     assert len(pipe_neigbours) == 2
@@ -72,8 +77,8 @@ def find_start(pipe_map):
     return start, pipe_neigbours
 
 
-def move(p, direction, pipe_map):
-    next_ = p[0] + direction.value[0], p[1] + direction.value[1]
+def move(point, direction, pipe_map):
+    next_ = point[0] + direction.value[0], point[1] + direction.value[1]
     try:
         next_pipe = pipe_map[next_[0]][next_[1]]
     except IndexError:
@@ -83,7 +88,7 @@ def move(p, direction, pipe_map):
     # print(direction, next_pipe, next_direction)
     if next_direction is None:
         raise ValueError(
-            "Cannot move", direction, "from", p, "next pipe invalid", next_pipe
+            "Cannot move", direction, "from", point, "next pipe invalid", next_pipe
         )
     return next_, next_pipe, next_direction
 
@@ -94,52 +99,81 @@ def draw_loop(pipe_map, points):
         plot.append([])
         for j in range(len(pipe_map[0])):
             if (i, j) in points:
-                plot[i].append("x")
+                if pipe_map[i][j] == "S":
+                    plot[i].append("S")
+                else:
+                    plot[i].append("x")
             else:
                 plot[i].append(".")
     for row in plot:
         print("".join(row))
 
 
-# FIXME this is broken but general approach should work. Search for first pipe
-# after encountering non-pipe, checking for start and end of line edge cases.
-def find_enclosed_sections(pipe_map, points):
-    row_enclosures = []
-    for i in range(len(pipe_map)):
-        row_enclosures.append([])
+def inside_outside_map(pipe_map, loop):
+    map_ = [["." for _ in range(len(pipe_map[0]))] for _ in range(len(pipe_map))]
 
-        start = None
-        enclosed = False
-        for j in range(len(pipe_map[0])):
-            if (i, j) not in points and enclosed and start is None:
-                start = j
+    prev_x, prev_y = loop[0][0]
+    map_[prev_x][prev_y] = "+"
 
-            elif (i, j) in points and start is not None:
-                row_enclosures[i].append((start, j))
-                start = None
-                enclosed = False
+    # Direction is the direction in which you *exit* the current pipe
+    for (x, y), pipe, direction in loop[1:]:
+        map_[x][y] = "+"
 
-            elif (i, j) in points:
-                enclosed = True
+        if pipe == "|":
+            if direction is Direction.SOUTH:
+                try_update(map_, x, y - 1, "R")
+                try_update(map_, x, y + 1, "L")
+            else:
+                try_update(map_, x, y - 1, "L")
+                try_update(map_, x, y + 1, "R")
+        elif pipe == "-":
+            if direction is Direction.EAST:
+                try_update(map_, x - 1, y, "L")
+                try_update(map_, x + 1, y, "R")
+            else:
+                try_update(map_, x - 1, y, "R")
+                try_update(map_, x + 1, y, "L")
 
-    print(row_enclosures)
+        # Fill in pipes on outside of corner, nothing to fill on inside
+        elif pipe == "F":
+            side = "L" if direction is Direction.NORTH else "R"
+            try_update(map_, x, y - 1, side)
+            try_update(map_, x - 1, y - 1, side)
+            try_update(map_, x - 1, y, side)
 
-    col_enclosures = []
-    for j in range(len(pipe_map[0])):
-        col_enclosures.append([])
+        elif pipe == "L":
+            side = "L" if direction is Direction.NORTH else "R"
+            try_update(map_, x, y - 1, side)
+            try_update(map_, x + 1, y - 1, side)
+            try_update(map_, x + 1, y, side)
 
-        start = None
-        enclosed = False
-        for i in range(len(pipe_map)):
-            if (i, j) not in points and enclosed and start is None:
-                start = i
+        elif pipe == "J":
+            side = "R" if direction is Direction.NORTH else "L"
+            try_update(map_, x, y + 1, side)
+            try_update(map_, x + 1, y + 1, side)
+            try_update(map_, x + 1, y, side)
 
-            elif (i, j) in points and start is not None:
-                col_enclosures[j].append((start, i))
-                start = None
-                enclosed = False
+        elif pipe == "7":
+            side = "L" if direction is Direction.SOUTH else "R"
+            try_update(map_, x - 1, y, side)
+            try_update(map_, x, y + 1, side)
+            try_update(map_, x - 1, y + 1, side)
 
-            elif (i, j) in points:
-                enclosed = True
+        # print("\n\n")
+        # print("x", x, "y", y, "Pipe", pipe, "direction", direction)
+        # for row in map_:
+        #     print("".join(row))
 
-    print(col_enclosures)
+    for row in map_:
+        print("".join(row))
+
+
+def try_update(map_, x, y, value):
+    if x < 0 or y < 0:
+        return
+
+    try:
+        if map_[x][y] != "+":
+            map_[x][y] = value
+    except IndexError:
+        pass
