@@ -11,6 +11,8 @@ from puzzles.day08 import ghost_maps
 from puzzles.day09 import oasis_report
 from puzzles.day10 import pipe_maze
 from puzzles.day11 import cosmic_expansion
+from puzzles.day12 import hot_springs
+from puzzles.day13 import mirrors
 
 import profiling
 
@@ -26,6 +28,8 @@ PUZZLES = {
     9: oasis_report.extrapolate,
     10: pipe_maze.search,
     11: cosmic_expansion.expand,
+    12: hot_springs.repair,
+    13: mirrors.reflect,
 }
 
 
