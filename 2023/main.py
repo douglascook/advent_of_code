@@ -13,6 +13,7 @@ from puzzles.day10 import pipe_maze
 from puzzles.day11 import cosmic_expansion
 from puzzles.day12 import hot_springs
 from puzzles.day13 import mirrors
+from puzzles.day14 import reflector
 
 import profiling
 
@@ -30,6 +31,7 @@ PUZZLES = {
     11: cosmic_expansion.expand,
     12: hot_springs.repair,
     13: mirrors.reflect,
+    14: reflector.tilt,
 }
 
 
