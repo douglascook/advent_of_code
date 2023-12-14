@@ -44,6 +44,6 @@ if __name__ == "__main__":
     input_path = f"{module}/{input_file}"
 
     if len(sys.argv) > 3 and sys.argv[3] == "--profile":
-        puzzle_run = profiling.profile_it(puzzle_run, repeats=5)
+        puzzle_run = profiling.profile_it(puzzle_run, repeats=int(sys.argv[4]))
 
     puzzle_run(input_path)
