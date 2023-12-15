@@ -14,6 +14,7 @@ from puzzles.day11 import cosmic_expansion
 from puzzles.day12 import hot_springs
 from puzzles.day13 import mirrors
 from puzzles.day14 import reflector
+from puzzles.day15 import holiday_ascii_string_helper
 
 import profiling
 
@@ -32,6 +33,7 @@ PUZZLES = {
     12: hot_springs.repair,
     13: mirrors.reflect,
     14: reflector.tilt,
+    15: holiday_ascii_string_helper.focus_lenses,
 }
 
 
