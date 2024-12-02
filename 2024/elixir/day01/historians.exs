@@ -1,14 +1,9 @@
 IO.puts("Day 1 - Historian Hysteria")
 
 defmodule Day1 do
-  def go() do
-    IO.puts("Processing test input...")
-    {list1, list2} = parse("../../inputs/day01/test_input.txt")
-    calculateDistance(list1, list2)
-    calculateSimilarity(list1, list2)
-
-    IO.puts("Processing puzzle input...")
-    {list1, list2} = parse("../../inputs/day01/input.txt")
+  def go(filepath) do
+    IO.puts("Processing input #{filepath}")
+    {list1, list2} = parse(filepath)
     calculateDistance(list1, list2)
     calculateSimilarity(list1, list2)
   end
@@ -49,4 +44,5 @@ defmodule Day1 do
   end
 end
 
-Day1.go()
+Day1.go("../../inputs/day01/test_input.txt")
+Day1.go("../../inputs/day01/input.txt")
